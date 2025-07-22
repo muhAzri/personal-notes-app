@@ -12,7 +12,7 @@ export default function SearchBar({ searchQuery, onSearchChange }: SearchBarProp
     <div className="mb-6 sm:mb-8">
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
-          <Icon className="text-gray-400">🔍</Icon>
+          <Icon className="text-gray-400 dark:text-slate-500">🔍</Icon>
         </div>
         <Input
           type="text"

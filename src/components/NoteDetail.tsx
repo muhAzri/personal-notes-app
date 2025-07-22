@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { TypographyH1, TypographyP } from "@/components/ui/typography"
 import DateDisplay from "@/components/DateDisplay"
-import { Note } from '../utils/local-data';
+import { Note } from '@domain/entities/Note';
 
 interface NoteDetailProps {
   note: Note
@@ -15,8 +15,8 @@ interface NoteDetailProps {
 export default function NoteDetail({ note, onArchive, onDelete, onBack }: NoteDetailProps) {
   return (
     <div className="max-w-5xl mx-auto">
-      <Card className="shadow-medium border border-gray-200 overflow-hidden">
-        <div className="bg-gradient-to-r from-primary to-blue-700 p-4 sm:p-8 text-white">
+      <Card className="shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 p-4 sm:p-8 text-white">
           <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
             <div className="flex-1 min-w-0">
               <TypographyH1 className="text-white mb-2 sm:mb-3 break-words">{note.title}</TypographyH1>
@@ -33,10 +33,10 @@ export default function NoteDetail({ note, onArchive, onDelete, onBack }: NoteDe
               <Button
                 onClick={onArchive}
                 variant="outline"
-                className={`px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-200 shadow-soft hover:shadow-medium flex-1 sm:flex-none whitespace-nowrap ${
+                className={`px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-200 shadow-sm flex-1 sm:flex-none whitespace-nowrap ${
                   note.archived
-                    ? 'bg-emerald-600 text-white hover:bg-emerald-700 border-emerald-600'
-                    : 'bg-warning text-white hover:bg-amber-600 border-warning'
+                    ? 'bg-emerald-600 dark:bg-emerald-600 text-white hover:bg-emerald-700 dark:hover:bg-emerald-700 border-emerald-600 dark:border-emerald-600'
+                    : 'bg-orange-600 dark:bg-orange-600 text-white hover:bg-orange-700 dark:hover:bg-orange-700 border-orange-600 dark:border-orange-600'
                 }`}
               >
                 <span className="sm:hidden">{note.archived ? '📤' : '📦'}</span>
@@ -45,7 +45,7 @@ export default function NoteDetail({ note, onArchive, onDelete, onBack }: NoteDe
               <Button
                 onClick={onDelete}
                 variant="outline"
-                className="px-4 sm:px-6 py-1.5 sm:py-2 bg-error text-white text-xs sm:text-sm font-medium hover:bg-red-600 transition-all duration-200 shadow-soft hover:shadow-medium flex-1 sm:flex-none whitespace-nowrap border-error"
+                className="px-4 sm:px-6 py-1.5 sm:py-2 bg-red-600 dark:bg-red-600 text-white text-xs sm:text-sm font-medium hover:bg-red-700 dark:hover:bg-red-700 transition-all duration-200 shadow-sm flex-1 sm:flex-none whitespace-nowrap border-red-600 dark:border-red-600"
               >
                 <span className="sm:hidden">🗑️</span>
                 <span className="hidden sm:inline">🗑️ Delete</span>
@@ -56,17 +56,17 @@ export default function NoteDetail({ note, onArchive, onDelete, onBack }: NoteDe
         
         <CardContent className="p-4 sm:p-8">
           <div className="prose max-w-none">
-            <TypographyP className="whitespace-pre-wrap text-gray-800 leading-relaxed text-base sm:text-lg break-words">
+            <TypographyP className="whitespace-pre-wrap text-gray-800 dark:text-slate-200 leading-relaxed text-base sm:text-lg break-words">
               {note.body}
             </TypographyP>
           </div>
         </CardContent>
         
-        <div className="p-4 sm:p-8 pt-0 border-t border-gray-200">
+        <div className="p-4 sm:p-8 pt-0 border-t border-gray-200 dark:border-slate-700">
           <Button
             onClick={onBack}
             variant="ghost"
-            className="text-gray-600 hover:text-primary font-medium text-sm sm:text-base"
+            className="text-gray-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm sm:text-base"
           >
             ← View Notes
           </Button>

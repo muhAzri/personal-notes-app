@@ -25,7 +25,7 @@ export default function NoteActions({
           onClick={onUnarchive}
           variant="outline"
           size="sm"
-          className={`${buttonSize} ${textSize} font-medium text-white bg-emerald-600 rounded-md sm:rounded-lg hover:bg-emerald-700 transition-all duration-200 shadow-soft whitespace-nowrap flex-1 sm:flex-none border-emerald-600 hover:border-emerald-700`}
+          className={`${buttonSize} ${textSize} font-medium text-white bg-emerald-600 dark:bg-emerald-600 rounded-md sm:rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-700 transition-all duration-200 shadow-sm whitespace-nowrap flex-1 sm:flex-none border-emerald-600 dark:border-emerald-600 hover:border-emerald-700 dark:hover:border-emerald-700`}
         >
           <span className="sm:hidden">📤</span>
           <span className="hidden sm:inline">📤 Unarchive</span>
@@ -35,7 +35,7 @@ export default function NoteActions({
           onClick={onArchive}
           variant="outline"
           size="sm"
-          className={`${buttonSize} ${textSize} font-medium text-white bg-warning rounded-md sm:rounded-lg hover:bg-amber-600 transition-all duration-200 shadow-soft whitespace-nowrap flex-1 sm:flex-none border-warning hover:border-amber-600`}
+          className={`${buttonSize} ${textSize} font-medium text-white bg-orange-600 dark:bg-orange-600 rounded-md sm:rounded-lg hover:bg-orange-700 dark:hover:bg-orange-700 transition-all duration-200 shadow-sm whitespace-nowrap flex-1 sm:flex-none border-orange-600 dark:border-orange-600 hover:border-orange-700 dark:hover:border-orange-700`}
         >
           <span className="sm:hidden">📦</span>
           <span className="hidden sm:inline">📦 Archive</span>
@@ -45,7 +45,7 @@ export default function NoteActions({
         onClick={onDelete}
         variant="outline"
         size="sm"
-        className={`${buttonSize} ${textSize} font-medium text-white bg-error rounded-md sm:rounded-lg hover:bg-red-600 transition-all duration-200 shadow-soft whitespace-nowrap flex-1 sm:flex-none border-error hover:border-red-600`}
+        className={`${buttonSize} ${textSize} font-medium text-white bg-red-600 dark:bg-red-600 rounded-md sm:rounded-lg hover:bg-red-700 dark:hover:bg-red-700 transition-all duration-200 shadow-sm whitespace-nowrap flex-1 sm:flex-none border-red-600 dark:border-red-600 hover:border-red-700 dark:hover:border-red-700`}
       >
         <span className="sm:hidden">🗑️</span>
         <span className="hidden sm:inline">🗑️ Delete</span>

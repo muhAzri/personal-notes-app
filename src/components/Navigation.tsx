@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { ReactNode } from 'react';
+import { useTranslation } from '@application/hooks/useTranslation';
 
 interface NavItemProps {
   to: string
@@ -9,15 +10,15 @@ interface NavItemProps {
 
 function NavItem({ to, children, variant = 'default' }: NavItemProps) {
   const activeVariants = {
-    default: 'bg-primary text-white shadow-soft',
-    warning: 'bg-warning text-white shadow-soft',
-    secondary: 'bg-emerald-600 text-white shadow-soft'
+    default: 'bg-blue-600 dark:bg-blue-500 text-white dark:text-white shadow-md ring-2 ring-blue-200 dark:ring-blue-400/50',
+    warning: 'bg-orange-600 dark:bg-orange-500 text-white dark:text-white shadow-md ring-2 ring-orange-200 dark:ring-orange-400/50',
+    secondary: 'bg-emerald-600 dark:bg-emerald-500 text-white dark:text-white shadow-md ring-2 ring-emerald-200 dark:ring-emerald-400/50'
   }
 
   const inactiveVariants = {
-    default: 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
-    warning: 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
-    secondary: 'text-emerald-700 hover:bg-secondary hover:text-white border border-emerald-200 hover:border-secondary bg-emerald-50'
+    default: 'text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-100 transition-colors',
+    warning: 'text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-slate-100 transition-colors',
+    secondary: 'text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-slate-700 hover:text-emerald-900 dark:hover:text-emerald-100 border border-emerald-200 dark:border-slate-600 transition-colors'
   }
 
   return (
@@ -35,19 +36,21 @@ function NavItem({ to, children, variant = 'default' }: NavItemProps) {
 }
 
 export default function Navigation() {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-wrap gap-1 sm:gap-2 justify-center sm:justify-end">
       <NavItem to="/">
         <span className="sm:hidden">📋</span>
-        <span className="hidden sm:inline">📋 Notes</span>
+        <span className="hidden sm:inline">📋 {t('nav.notes')}</span>
       </NavItem>
       <NavItem to="/archived" variant="warning">
         <span className="sm:hidden">📦</span>
-        <span className="hidden sm:inline">📦 Archived Notes</span>
+        <span className="hidden sm:inline">📦 {t('nav.archived')}</span>
       </NavItem>
       <NavItem to="/notes/new" variant="secondary">
         <span className="sm:hidden">✏️</span>
-        <span className="hidden sm:inline">✏️ Add Note</span>
+        <span className="hidden sm:inline">✏️ {t('nav.add')}</span>
       </NavItem>
     </div>
   )

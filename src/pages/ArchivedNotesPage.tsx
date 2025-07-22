@@ -1,21 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getArchivedNotes, deleteNote, unarchiveNote } from '../utils/local-data';
-import { Note } from '../utils/local-data';
-import SearchBar from '../components/SearchBar';
-import NoteCard from '../components/NoteCard';
-import PageHeader from '../components/PageHeader';
-import NoteStats from '../components/NoteStats';
-import EmptyState from '../components/EmptyState';
+import { Note } from '@domain/entities/Note';
+import { useAppSelector } from '@infrastructure/hooks/useAppSelector';
+import { useAppDispatch } from '@infrastructure/hooks/useAppDispatch';
+import { setArchivedNotes, setLoading, setError, removeNote, updateNoteArchiveStatus } from '@infrastructure/store/notesSlice';
+import { useTranslation } from '@application/hooks/useTranslation';
+import { container } from '@infrastructure/di/container';
+import SearchBar from '@/components/SearchBar';
+import NoteCard from '@/components/NoteCard';
+import PageHeader from '@/components/PageHeader';
+import NoteStats from '@/components/NoteStats';
+import EmptyState from '@/components/EmptyState';
+import { LoadingState } from '@/components/LoadingState';
 
 export default function ArchivedNotesPage(): JSX.Element {
-  const [notes, setNotes] = useState<Note[]>([]);
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const { archivedNotes, isLoading, error } = useAppSelector((state) => state.notes);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
 
   useEffect(() => {
-    setNotes(getArchivedNotes());
-  }, []);
+    const loadArchivedNotes = async () => {
+      dispatch(setLoading(true));
+      try {
+        const notesData = await container.getArchivedNotesUseCase.execute();
+        dispatch(setArchivedNotes(notesData));
+      } catch (err: any) {
+        dispatch(setError(err.message || 'Failed to load archived notes'));
+      }
+    };
+
+    loadArchivedNotes();
+  }, [dispatch]);
 
   const handleSearchChange = (query: string): void => {
     if (query) {
@@ -25,24 +42,49 @@ export default function ArchivedNotesPage(): JSX.Element {
     }
   };
 
-  const handleDelete = (id: string): void => {
-    deleteNote(id);
-    setNotes(getArchivedNotes());
+  const handleDelete = async (id: string): Promise<void> => {
+    dispatch(setLoading(true));
+    try {
+      await container.deleteNoteUseCase.execute(id);
+      dispatch(removeNote(id));
+    } catch (err: any) {
+      dispatch(setError(err.message || 'Failed to delete note'));
+    }
   };
 
-  const handleUnarchive = (id: string): void => {
-    unarchiveNote(id);
-    setNotes(getArchivedNotes());
+  const handleUnarchive = async (id: string): Promise<void> => {
+    dispatch(setLoading(true));
+    try {
+      await container.unarchiveNoteUseCase.execute(id);
+      dispatch(updateNoteArchiveStatus({ id, archived: false }));
+    } catch (err: any) {
+      dispatch(setError(err.message || 'Failed to unarchive note'));
+    }
   };
 
-  const filteredNotes = notes.filter(note =>
-    note.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredNotes = archivedNotes.filter(note =>
+    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    note.body.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (isLoading && archivedNotes.length === 0) {
+    return <LoadingState />;
+  }
+
+  if (error) {
+    return (
+      <EmptyState
+        icon="❌"
+        title={t('common.error')}
+        description={error}
+      />
+    );
+  }
 
   return (
     <div>
       <PageHeader
-        title="📦 Archived Notes"
+        title={`📦 ${t('nav.archived')}`}
         description="Your archived notes collection"
         actions={<NoteStats count={filteredNotes.length} type="archived" />}
       />
@@ -62,9 +104,9 @@ export default function ArchivedNotesPage(): JSX.Element {
         ) : (
           <EmptyState
             icon="📦"
-            title="Archive Empty"
+            title={t('notes.emptyArchive')}
             description="No notes have been archived yet. Archive notes from your active collection to organize them better."
-            actionLabel="📋 View Notes"
+            actionLabel={`📋 ${t('nav.notes')}`}
             actionHref="/"
           />
         )

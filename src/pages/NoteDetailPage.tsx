@@ -1,69 +1,97 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button"
-import { getNote, deleteNote, archiveNote, unarchiveNote } from '../utils/local-data';
-import { Note } from '../utils/local-data';
-import LoadingState from '../components/LoadingState';
-import EmptyState from '../components/EmptyState';
-import NoteDetail from '../components/NoteDetail';
+import { Button } from "@/components/ui/button";
+import { Note } from '@domain/entities/Note';
+import { useAppSelector } from '@infrastructure/hooks/useAppSelector';
+import { useAppDispatch } from '@infrastructure/hooks/useAppDispatch';
+import { setCurrentNote, setLoading, setError, removeNote, updateNoteArchiveStatus } from '@infrastructure/store/notesSlice';
+import { useTranslation } from '@application/hooks/useTranslation';
+import { container } from '@infrastructure/di/container';
+import { LoadingState } from '@/components/LoadingState';
+import EmptyState from '@/components/EmptyState';
+import NoteDetail from '@/components/NoteDetail';
 
 export default function NoteDetailPage(): JSX.Element {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [note, setNote] = useState<Note | null>(null);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { currentNote, isLoading, error } = useAppSelector((state) => state.notes);
 
   useEffect(() => {
-    if (id) {
-      const foundNote = getNote(id);
-      setNote(foundNote || null);
-    }
-    setLoading(false);
-  }, [id]);
-
-  const handleDelete = (): void => {
-    if (note && window.confirm('Are you sure you want to delete this note?')) {
-      deleteNote(note.id);
-      void navigate('/');
-    }
-  };
-
-  const handleArchive = (): void => {
-    if (note) {
-      if (note.archived) {
-        unarchiveNote(note.id);
-      } else {
-        archiveNote(note.id);
+    const loadNote = async () => {
+      if (id) {
+        dispatch(setLoading(true));
+        try {
+          const note = await container.getNoteByIdUseCase.execute(id);
+          dispatch(setCurrentNote(note));
+        } catch (err: any) {
+          dispatch(setError(err.message || 'Failed to load note'));
+          dispatch(setCurrentNote(null));
+        }
       }
-      const updatedNote = getNote(note.id);
-      setNote(updatedNote || null);
+    };
+
+    loadNote();
+  }, [id, dispatch]);
+
+  const handleDelete = async (): Promise<void> => {
+    if (currentNote && window.confirm('Are you sure you want to delete this note?')) {
+      dispatch(setLoading(true));
+      try {
+        await container.deleteNoteUseCase.execute(currentNote.id);
+        dispatch(removeNote(currentNote.id));
+        navigate('/');
+      } catch (err: any) {
+        dispatch(setError(err.message || 'Failed to delete note'));
+      }
     }
   };
 
-  if (loading) {
+  const handleArchive = async (): Promise<void> => {
+    if (currentNote) {
+      dispatch(setLoading(true));
+      try {
+        if (currentNote.archived) {
+          await container.unarchiveNoteUseCase.execute(currentNote.id);
+          dispatch(updateNoteArchiveStatus({ id: currentNote.id, archived: false }));
+        } else {
+          await container.archiveNoteUseCase.execute(currentNote.id);
+          dispatch(updateNoteArchiveStatus({ id: currentNote.id, archived: true }));
+        }
+        
+        const updatedNote = await container.getNoteByIdUseCase.execute(currentNote.id);
+        dispatch(setCurrentNote(updatedNote));
+      } catch (err: any) {
+        dispatch(setError(err.message || 'Failed to update note'));
+      }
+    }
+  };
+
+  if (isLoading) {
     return <LoadingState />;
   }
 
-  if (!note) {
+  if (error || !currentNote) {
     return (
       <div className="text-center py-16">
         <EmptyState
           icon="❌"
-          title="Note not found"
-          description="The note you're looking for doesn't exist or may have been deleted."
+          title={t('common.error')}
+          description={error || "The note you're looking for doesn't exist or may have been deleted."}
         />
         <div className="space-x-4 mt-8">
           <Button
             onClick={() => void navigate('/')}
-            className="bg-primary hover:bg-blue-700 shadow-soft hover:shadow-medium"
+            className="bg-blue-600 hover:bg-blue-700"
           >
-            📋 View Notes
+            📋 {t('nav.notes')}
           </Button>
           <Button
             onClick={() => void navigate('/archived')}
-            className="bg-warning hover:bg-amber-600 shadow-soft hover:shadow-medium"
+            className="bg-orange-600 hover:bg-orange-700"
           >
-            📦 View Archived Notes
+            📦 {t('nav.archived')}
           </Button>
         </div>
       </div>
@@ -72,7 +100,7 @@ export default function NoteDetailPage(): JSX.Element {
 
   return (
     <NoteDetail
-      note={note}
+      note={currentNote}
       onArchive={handleArchive}
       onDelete={handleDelete}
       onBack={() => void navigate('/')}
