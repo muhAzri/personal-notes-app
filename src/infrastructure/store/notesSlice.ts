@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Note } from '@domain/entities/Note';
+import { Note } from '@core/domain/entities/Note';
 
 interface NotesState {
   notes: Note[];

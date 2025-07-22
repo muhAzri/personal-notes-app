@@ -5,15 +5,15 @@ import { Provider } from 'react-redux';
 import { store } from '@infrastructure/store/store';
 import { useAppDispatch } from '@infrastructure/hooks/useAppDispatch';
 import { setTheme } from '@infrastructure/store/themeSlice';
-import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
-import NotesPage from './pages/NotesPage';
-import ArchivedNotesPage from './pages/ArchivedNotesPage';
-import NoteDetailPage from './pages/NoteDetailPage';
-import AddNotePage from './pages/AddNotePage';
-import LoginPage from './features/auth/components/LoginPage';
-import RegisterPage from './features/auth/components/RegisterPage';
-import NotFoundPage from './pages/NotFoundPage';
+import Layout from '@core/components/Layout';
+import ProtectedRoute from '@core/components/ProtectedRoute';
+import NotesPage from '@features/notes/pages/NotesPage';
+import ArchivedNotesPage from '@features/notes/pages/ArchivedNotesPage';
+import NoteDetailPage from '@features/notes/pages/NoteDetailPage';
+import AddNotePage from '@features/notes/pages/AddNotePage';
+import LoginPage from '@features/auth/pages/LoginPage';
+import RegisterPage from '@features/auth/pages/RegisterPage';
+import NotFoundPage from '@features/notes/pages/NotFoundPage';
 
 function AppContent(): JSX.Element {
   const dispatch = useAppDispatch();

@@ -1,70 +1,230 @@
-# Getting Started with Create React App
+# Personal Notes App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, feature-rich personal notes application built with React, TypeScript, and Vite. The application follows clean architecture principles with proper modularization and supports multiple languages and themes.
+
+## Features
+
+- ✅ **User Authentication** - Login and registration with JWT tokens
+- ✅ **Notes Management** - Create, read, update, delete, and archive notes
+- ✅ **Multi-language Support** - Indonesian and English localization
+- ✅ **Dark/Light Theme** - Toggle between themes with persistence
+- ✅ **Responsive Design** - Optimized for mobile and desktop
+- ✅ **Search Functionality** - Find notes quickly
+- ✅ **Statistics Dashboard** - Track your note-taking habits
+- ✅ **Modern UI** - Built with Shadcn/ui components
+
+## Architecture
+
+This application follows **Clean Architecture** principles with proper separation of concerns:
+
+```
+src/
+├── core/                    # Shared business logic and components
+│   ├── application/         # Use cases, hooks, and localization
+│   ├── components/          # Shared UI components
+│   └── domain/             # Entities and repository interfaces
+├── features/               # Feature-specific modules
+│   ├── auth/              # Authentication feature
+│   └── notes/             # Notes management feature
+├── infrastructure/        # External concerns
+│   ├── api/              # HTTP client
+│   ├── di/               # Dependency injection
+│   ├── repositories/     # Repository implementations
+│   └── store/            # Redux state management
+└── lib/                  # Utility functions
+```
+
+### Key Architectural Benefits:
+- **Modular Design** - Each feature is self-contained
+- **Dependency Inversion** - Core business logic doesn't depend on external frameworks
+- **Testability** - Clean separation makes testing easier
+- **Maintainability** - Well-organized code structure
+
+## Tech Stack
+
+### Frontend
+- **React 18** - UI library with hooks and functional components
+- **TypeScript** - Type-safe JavaScript with strict typing
+- **Vite** - Fast build tool and development server
+- **React Router** - Client-side routing
+- **Redux Toolkit** - State management with modern Redux
+- **Shadcn/ui** - Modern, accessible UI components
+- **Tailwind CSS** - Utility-first CSS framework
+- **Lucide Icons** - Modern icon library
+
+### Development Tools
+- **ESLint** - Code linting with strict TypeScript rules
+- **Prettier** - Code formatting
+- **Husky** - Git hooks for code quality
+
+## Getting Started
+
+### Prerequisites
+- Node.js (version 18 or higher)
+- npm or yarn package manager
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd personal-notes-app-starter
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   Update the environment variables as needed.
+
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+   The application will be available at [http://localhost:5173](http://localhost:5173)
 
 ## Available Scripts
 
-In the project directory, you can run:
+### Development
+```bash
+npm run dev          # Start development server with hot reload
+npm run build        # Build for production
+npm run preview      # Preview production build locally
+```
 
-### `npm start`
+### Code Quality
+```bash
+npm run lint         # Run ESLint to check code quality
+npm run lint:fix     # Automatically fix linting issues
+npm run type-check   # Run TypeScript compiler checks
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Testing
+```bash
+npm run test         # Run unit tests
+npm run test:coverage # Run tests with coverage report
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Project Structure
 
-### `npm test`
+### Core Module (`src/core/`)
+Contains shared business logic and components used across features.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **`application/`** - Business logic, use cases, and application services
+- **`components/`** - Reusable UI components
+- **`domain/`** - Core entities and repository interfaces
 
-### `npm run build`
+### Features Module (`src/features/`)
+Feature-specific code organized by business domain.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **`auth/`** - Authentication (login, register, logout)
+- **`notes/`** - Notes management (CRUD operations, archiving)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Infrastructure Module (`src/infrastructure/`)
+External concerns and technical implementations.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **`api/`** - HTTP client configuration
+- **`repositories/`** - Repository pattern implementations
+- **`store/`** - Redux state management
+- **`di/`** - Dependency injection container
 
-### `npm run eject`
+## Key Features Explained
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Authentication System
+- JWT-based authentication with automatic token refresh
+- Protected routes with authentication guards
+- User session persistence
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Notes Management
+- Full CRUD operations for notes
+- Note archiving and restoration
+- Search and filtering capabilities
+- Statistics and analytics
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Internationalization (i18n)
+- Support for multiple languages (ID/EN)
+- Dynamic language switching
+- Persistent language preference
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Theme System
+- Dark and light theme support
+- System preference detection
+- Theme persistence across sessions
 
-## Learn More
+### State Management
+- Redux Toolkit for predictable state updates
+- Feature-based state organization
+- Async thunks for API operations
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Development Guidelines
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Code Style
+- Use TypeScript for all new files
+- Follow the existing naming conventions
+- Add proper return types to functions
+- Use proper error handling patterns
 
-### Code Splitting
+### Component Guidelines
+- Use functional components with hooks
+- Implement proper prop types
+- Follow the component composition pattern
+- Use Shadcn/ui components when possible
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Architecture Principles
+- Keep business logic in the core module
+- Use dependency injection for external dependencies
+- Implement repository pattern for data access
+- Follow clean architecture boundaries
 
-### Analyzing the Bundle Size
+## Environment Variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Create a `.env.local` file with the following variables:
 
-### Making a Progressive Web App
+```env
+VITE_API_BASE_URL=http://localhost:3001
+VITE_APP_TITLE=Personal Notes App
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Build and Deployment
 
-### Advanced Configuration
+### Production Build
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+The build artifacts will be stored in the `dist/` directory.
 
 ### Deployment
+The application can be deployed to any static hosting service:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- **Vercel** - Zero configuration deployment
+- **Netlify** - Continuous deployment from Git
+- **GitHub Pages** - Free hosting for public repositories
+- **AWS S3 + CloudFront** - Scalable cloud hosting
 
-### `npm run build` fails to minify
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes following the coding guidelines
+4. Run tests and linting (`npm run lint && npm run type-check`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [React](https://reactjs.org/) - UI library
+- [Vite](https://vitejs.dev/) - Build tool
+- [Shadcn/ui](https://ui.shadcn.com/) - Component library
+- [Tailwind CSS](https://tailwindcss.com/) - Styling framework

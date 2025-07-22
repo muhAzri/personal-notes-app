@@ -1,35 +1,58 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { ApiResponse } from '@domain/entities/ApiResponse';
+import { ApiResponse } from '@core/domain/entities/ApiResponse';
+import { ITokenStorage } from '@core/application/interfaces/ITokenStorage';
+import { INavigationService } from '@core/application/interfaces/INavigationService';
+
+export interface ApiClientConfig {
+  baseURL: string;
+  tokenStorage: ITokenStorage;
+  navigationService: INavigationService;
+}
 
 class ApiClient {
   private client: AxiosInstance;
+  private tokenStorage: ITokenStorage;
+  private navigationService: INavigationService;
 
-  constructor() {
+  constructor(config: ApiClientConfig) {
+    this.tokenStorage = config.tokenStorage;
+    this.navigationService = config.navigationService;
+
     this.client = axios.create({
-      baseURL: import.meta.env.VITE_API_BASE_URL,
+      baseURL: config.baseURL,
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
+    this.setupInterceptors();
+  }
+
+  private setupInterceptors(): void {
+    // Request interceptor for authentication
     this.client.interceptors.request.use((config) => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
+      const token = this.tokenStorage.getToken();
+      if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
       return config;
     });
 
+    // Response interceptor for error handling
     this.client.interceptors.response.use(
       (response: AxiosResponse<ApiResponse>) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          localStorage.removeItem('accessToken');
-          window.location.href = '/login';
-        }
-        return Promise.reject(error);
+      (error: unknown) => {
+        this.handleResponseError(error);
+        return Promise.reject(new Error('API request failed'));
       }
     );
+  }
+
+  private handleResponseError(error: unknown): void {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      this.tokenStorage.removeToken();
+      this.navigationService.navigateTo('/login');
+    }
   }
 
   async get<T>(url: string): Promise<ApiResponse<T>> {
@@ -37,12 +60,12 @@ class ApiClient {
     return response.data;
   }
 
-  async post<T>(url: string, data?: any): Promise<ApiResponse<T>> {
+  async post<T>(url: string, data?: unknown): Promise<ApiResponse<T>> {
     const response = await this.client.post<ApiResponse<T>>(url, data);
     return response.data;
   }
 
-  async put<T>(url: string, data?: any): Promise<ApiResponse<T>> {
+  async put<T>(url: string, data?: unknown): Promise<ApiResponse<T>> {
     const response = await this.client.put<ApiResponse<T>>(url, data);
     return response.data;
   }
@@ -53,4 +76,4 @@ class ApiClient {
   }
 }
 
-export const apiClient = new ApiClient();
+export { ApiClient };

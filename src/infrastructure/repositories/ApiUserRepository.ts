@@ -1,6 +1,6 @@
-import { UserRepository } from '@domain/repositories/UserRepository';
-import { User, RegisterRequest, LoginRequest, AuthResponse } from '@domain/entities/User';
-import { apiClient } from '@infrastructure/api/apiClient';
+import { UserRepository } from '@core/domain/repositories/UserRepository';
+import { User, RegisterRequest, LoginRequest, AuthResponse } from '@core/domain/entities/User';
+import { apiClient } from '@infrastructure/api/apiClientInstance';
 
 export class ApiUserRepository implements UserRepository {
   async register(request: RegisterRequest): Promise<void> {
@@ -8,11 +8,13 @@ export class ApiUserRepository implements UserRepository {
   }
 
   async login(request: LoginRequest): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>('/login', request);
+    const response = await apiClient.post<{ accessToken: string }>('/login', request);
     if (!response.data) {
       throw new Error('Login failed');
     }
-    return response.data;
+    return {
+      accessToken: response.data.accessToken
+    };
   }
 
   async getCurrentUser(): Promise<User> {

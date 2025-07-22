@@ -29,10 +29,9 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@domain/*": ["./src/domain/*"],
-      "@application/*": ["./src/application/*"],
-      "@infrastructure/*": ["./src/infrastructure/*"],
-      "@presentation/*": ["./src/*"]
+      "@core/*": ["./src/core/*"],
+      "@features/*": ["./src/features/*"],
+      "@infrastructure/*": ["./src/infrastructure/*"]
     }
   },
   "include": ["src"],

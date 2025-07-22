@@ -1,6 +1,6 @@
-import { NoteRepository } from '@domain/repositories/NoteRepository';
-import { Note, CreateNoteRequest } from '@domain/entities/Note';
-import { apiClient } from '@infrastructure/api/apiClient';
+import { NoteRepository } from '@core/domain/repositories/NoteRepository';
+import { Note, CreateNoteRequest } from '@core/domain/entities/Note';
+import { apiClient } from '@infrastructure/api/apiClientInstance';
 
 export class ApiNoteRepository implements NoteRepository {
   async getAllNotes(): Promise<Note[]> {
