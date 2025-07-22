@@ -49,20 +49,20 @@ export default function ArchivedNotesPage(): JSX.Element {
           </span>
         </div>
       </div>
-      
-      <SearchBar 
-        searchQuery={searchQuery} 
-        onSearchChange={handleSearchChange} 
+
+      <SearchBar
+        searchQuery={searchQuery}
+        onSearchChange={handleSearchChange}
       />
 
       {filteredNotes.length === 0 ? (
         <div className="text-center py-12 sm:py-16">
           <div className="text-6xl sm:text-8xl mb-4 sm:mb-6">📦</div>
           <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
-            {searchQuery ? 'No archived notes found' : 'Arsip kosong'}
+            {searchQuery ? 'No archived notes found' : 'Archive Empty'}
           </h3>
           <p className="text-gray-600 text-base sm:text-lg max-w-sm sm:max-w-md mx-auto px-4">
-            {searchQuery 
+            {searchQuery
               ? `No archived notes found containing "${searchQuery}". Try searching with different keywords.`
               : 'No notes have been archived yet. Archive notes from your active collection to organize them better.'
             }
@@ -85,7 +85,7 @@ export default function ArchivedNotesPage(): JSX.Element {
               key={note.id}
               note={note}
               onDelete={handleDelete}
-              onArchive={() => {}}
+              onArchive={() => { }}
               onUnarchive={handleUnarchive}
             />
           ))}
